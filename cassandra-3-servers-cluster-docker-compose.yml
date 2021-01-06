@@ -1,0 +1,82 @@
+# Latest version of the Docker-compose language to this date
+version: '3.8'
+
+# The virtual network all the nodes will be into - let Docker organize everything
+# Though you can set up networks manually if you need correlation between nodes and IPs, for instance...
+networks:
+
+    cassandra-cluster-network:
+
+services:
+
+    cassandra-cluster-server-1:
+        # Feel free to fix the versions
+        image: cassandra:latest
+        container_name: cassandra-cluster-server-1
+        hostname: cassandra-cluster-server-1
+        healthcheck:
+            test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+        networks:
+            - cassandra-cluster-network
+        ports:
+            # Native port of Cassandra
+            - "9042:9042"
+        volumes:
+            - ./docker-volumes/cassandra-cluster-server-1:/var/lib/cassandra
+            - ./docker-sources/etc-slash-cassandra/cassandra-cluster-server-1:/etc/cassandra
+        # Declare and save environments variables into "environment"
+        environment: &environment
+            # The first two nodes will be seeds
+            CASSANDRA_SEEDS: "cassandra-cluster-server-1,cassandra-cluster-server-2"
+            CASSANDRA_CLUSTER_NAME: CassandraPW
+            CASSANDRA_DC: Mars
+            CASSANDRA_RACK: West
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+            CASSANDRA_NUM_TOKENS: 128
+
+    cassandra-cluster-server-2:
+        # Feel free to fix the versions
+        image: cassandra:latest
+        container_name: cassandra-cluster-server-2
+        hostname: cassandra-cluster-server-2
+        healthcheck:
+            test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+        networks:
+            - cassandra-cluster-network
+        ports:
+            - "9043:9042"  # Expose native binary CQL port for your apps
+        volumes:
+            - ./docker-volumes/cassandra-cluster-server-2:/var/lib/cassandra    # This is the volume that will persist data for cass2 node
+            - ./docker-sources/etc-slash-cassandra/cassandra-cluster-server-2:/etc/cassandra    # Use your own config files for full control
+        environment: *environment    # point to "environment" to use the same environment variables as cass1
+        # Set up some startup dependencies
+        depends_on:
+            - 'cassandra-cluster-server-1'
+
+    cassandra-cluster-server-3:
+        # Feel free to fix the versions
+        image: cassandra:latest
+        container_name: cassandra-cluster-server-3
+        hostname: cassandra-cluster-server-3
+        healthcheck:
+            test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+        networks:
+            - cassandra-cluster-network
+        ports:
+            - "9044:9042"  # Expose native binary CQL port for your apps
+        volumes:
+            - ./docker-volumes/cassandra-cluster-server-3:/var/lib/cassandra    # This is the volume that will persist data for cass3 node
+            - ./docker-sources/etc-slash-cassandra/cassandra-cluster-server-3:/etc/cassandra    # Use your own config files for full control
+        environment: *environment    # point to "environment" to use the same environment variables as cass1
+        # Set up some startup dependencies
+        depends_on:
+            - 'cassandra-cluster-server-2'
