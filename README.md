@@ -37,6 +37,7 @@ Apache Cassandra Docker Hub info: https://hub.docker.com/_/cassandra
 
 Creates three containers, one by one:
 ```shell script
+docker network create cassandra-network
 docker run --name cassandra-server-1 --network cassandra-network -d -p 9042:9042 -v C:\docker-volumes\cassandra-server-1:/var/lib/cassandra cassandra:latest
 docker run --name cassandra-server-2 --network cassandra-network -d -p 9043:9042 -v C:\docker-volumes\cassandra-server-2:/var/lib/cassandra cassandra:latest
 docker run --name cassandra-server-3 --network cassandra-network -d -p 9044:9042 -v C:\docker-volumes\cassandra-server-3:/var/lib/cassandra cassandra:latest
