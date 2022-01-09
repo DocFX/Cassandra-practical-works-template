@@ -61,7 +61,7 @@ docker stop tmp
 
 To start the cluster:
 ```shell script
-docker-compose -f cassandra-3-servers-cluster-docker-compose.yml up -d
+docker-compose -f cassandra-3-servers-cluster-docker-compose.yml up -d --force-recreate
 ```
 
 Check the nodes are running and OK:
