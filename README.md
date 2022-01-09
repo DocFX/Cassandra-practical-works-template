@@ -59,23 +59,32 @@ docker cp tmp:/etc/cassandra etc_cassandra-latest_vanilla
 docker stop tmp
 ```
 
-To start the cluster:
+## Starting the cluster:
+
+Cassandra 4.X:
 ```shell script
-docker-compose -f cassandra-3-servers-cluster-docker-compose.yml up -d --force-recreate
+docker-compose -f cassandra4-3-servers-cluster-docker-compose.yml up -d --force-recreate
 ```
 
-Check the nodes are running and OK:
+Cassandra 3.X:
 ```shell script
-docker exec cassandra-cluster-server-1 nodetool status
-docker exec cassandra-cluster-server-2 nodetool status
-docker exec cassandra-cluster-server-3 nodetool status
+docker-compose -f cassandra3-3-servers-cluster-docker-compose.yml up -d --force-recreate
+```
+**NOTE** you need to change the scripts according to the local ports if you change Cassandra Version to 3. 
+
+
+Check the nodes are running and OK (replace "X" with the version chosen above):
+```shell script
+docker exec cassandraX-cluster-server-1 nodetool status
+docker exec cassandraX-cluster-server-2 nodetool status
+docker exec cassandraX-cluster-server-3 nodetool status
 ```
 
-Run the CQL Shell of each container:
+Run the CQL Shell of each container (replace "X" with the version chosen above):
 ```shell script
-docker exec -it cassandra-cluster-server-1 cqlsh
-docker exec -it cassandra-cluster-server-2 cqlsh
-docker exec -it cassandra-cluster-server-3 cqlsh
+docker exec -it cassandraX-cluster-server-1 cqlsh
+docker exec -it cassandraX-cluster-server-2 cqlsh
+docker exec -it cassandraX-cluster-server-3 cqlsh
 ```
 
 ## Expected structures and CQL + sample data
