@@ -156,7 +156,7 @@ npm install cassandra-driver
 To run the program:
 ```shell script
 cd javascript
-go node index.js
+node index.js
 ```
 
 
