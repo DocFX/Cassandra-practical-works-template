@@ -1,0 +1,27 @@
+# Latest version of the Docker-compose language to this date
+version: '3.9'
+
+# The virtual network all the nodes will be into - let Docker organize everything
+# Though you can set up networks manually if you need correlation between nodes and IPs, for instance...
+networks:
+
+    mongodb6-cluster-network:
+
+services:
+
+    mongodb6-cluster-server-1:
+        # Feel free to fix the versions
+        image: mongo:6
+        container_name: mongodb6-cluster-server-1
+        hostname: mongodb6-cluster-server-1
+        networks:
+            - mongodb6-cluster-network
+        ports:
+            # Native port of MongoDB
+            - "27017:27017"
+        volumes:
+            - ./docker-volumes/mongodb6-cluster-server-1:/var/lib/mongodb
+            - ./docker-sources/etc-slash-mongodb6/mongodb6-cluster-server-1/mongod.conf.orig:/etc/mongod.conf.orig
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
