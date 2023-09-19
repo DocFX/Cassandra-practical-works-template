@@ -2,9 +2,7 @@
 .idea
 
 # Exclude the local part of mounting volumes
-docker-volumes/cassandra-cluster-server-1/*
-docker-volumes/cassandra-cluster-server-2/*
-docker-volumes/cassandra-cluster-server-3/*
+docker-volumes/*
 
 # Keep some specific files in some very specific places
 !.gitkeep

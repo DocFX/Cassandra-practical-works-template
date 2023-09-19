@@ -1,0 +1,37 @@
+# Latest version of the Docker-compose language to this date
+version: '3.9'
+
+# The virtual network all the nodes will be into - let Docker organize everything
+# Though you can set up networks manually if you need correlation between nodes and IPs, for instance...
+networks:
+
+    cassandra4-single-cluster-network:
+
+services:
+
+    cassandra4-single-cluster-server-1:
+        # Feel free to fix the versions
+        image: cassandra:4.1
+        container_name: cassandra4-single-cluster-server-1
+        hostname: cassandra4-single-cluster-server-1
+        healthcheck:
+            test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+        networks:
+            - cassandra4-single-cluster-network
+        ports:
+            # Native port of Cassandra
+            - "9042:9042"
+        volumes:
+            - ./docker-volumes/cassandra4-single-cluster-server-1:/var/lib/cassandra
+        # Declare and save environments variables into "environment"
+        environment: &environment
+            # The first two nodes will be seeds
+            CASSANDRA_SEEDS: "cassandra4-single-cluster-server-1"
+            CASSANDRA_CLUSTER_NAME: CassandraPW
+            CASSANDRA_DC: Mars
+            CASSANDRA_RACK: West
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+            CASSANDRA_NUM_TOKENS: 128

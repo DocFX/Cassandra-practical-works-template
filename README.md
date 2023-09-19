@@ -61,6 +61,11 @@ docker stop tmp
 
 ## Starting the cluster:
 
+Cassandra 4.X (single server):
+```shell script
+docker-compose -f cassandra4-1-server-cluster-docker-compose.yml up -d --force-recreate
+```
+
 Cassandra 4.X:
 ```shell script
 docker-compose -f cassandra4-3-servers-cluster-docker-compose.yml up -d --force-recreate
